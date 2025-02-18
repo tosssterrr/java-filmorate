@@ -13,6 +13,7 @@ import java.util.Map;
 public class MemoryUserService implements UserService {
 
     private final Map<Long, User> users = new HashMap<>();
+    private int counter = 0;
 
     @Override
     public User createUser(User user) {
@@ -51,11 +52,6 @@ public class MemoryUserService implements UserService {
     }
 
     private long getNextId() {
-        long currentMaxId = users.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
-        return ++currentMaxId;
+        return ++counter;
     }
 }

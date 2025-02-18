@@ -16,6 +16,7 @@ public class MemoryFilmService implements FilmService {
 
     private static final LocalDate MIN_RELEASE_DATE = LocalDate
             .of(1895, 12, 28);
+    private int counter = 0;
 
     public Film createFilm(Film film) {
         validateReleaseDate(film.getReleaseDate());
@@ -48,11 +49,6 @@ public class MemoryFilmService implements FilmService {
     }
 
     private long getNextId() {
-        long currentMaxId = films.keySet()
-                .stream()
-                .mapToLong(id -> id)
-                .max()
-                .orElse(0);
-        return ++currentMaxId;
+        return ++counter;
     }
 }
