@@ -1,28 +1,27 @@
 package ru.yandex.practicum.filmorate.service.film;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmDateException;
 import ru.yandex.practicum.filmorate.exception.IdNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
 
 @Service
+@RequiredArgsConstructor
 public class MemoryFilmService implements FilmService {
 
-    private final HashMap<Long, Film> films = new HashMap<>();
+    private final FilmStorage storage;
 
     private static final LocalDate MIN_RELEASE_DATE = LocalDate
             .of(1895, 12, 28);
-    private int counter = 0;
 
     public Film createFilm(Film film) {
         validateReleaseDate(film.getReleaseDate());
-        film.setId(getNextId());
-        films.put(film.getId(), film);
-        return film;
+        return storage.save(film);
     }
 
     private void validateReleaseDate(LocalDate releaseDate) {
@@ -33,22 +32,17 @@ public class MemoryFilmService implements FilmService {
 
     @Override
     public Collection<Film> getAllFilms() {
-        return films.values();
+        return storage.findAll();
     }
 
     @Override
     public Film updateFilm(Film film) {
-        if (!films.containsKey(film.getId())) {
+        if (storage.findById(film.getId()) == null) {
             throw new IdNotFoundException("Фильм с id " + film.getId() + " не найден");
         }
         if (film.getReleaseDate() != null) {
             validateReleaseDate(film.getReleaseDate());
         }
-        films.put(film.getId(), film);
-        return film;
-    }
-
-    private long getNextId() {
-        return ++counter;
+        return storage.update(film);
     }
 }

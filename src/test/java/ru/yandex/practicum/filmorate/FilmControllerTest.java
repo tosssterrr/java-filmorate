@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.exception.FilmDateException;
 import ru.yandex.practicum.filmorate.exception.IdNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.MemoryFilmService;
+import ru.yandex.practicum.filmorate.storage.film.MemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -23,7 +24,7 @@ class FilmControllerTest {
 
 	@BeforeEach
 	void setUp() {
-		filmService = new MemoryFilmService();
+		filmService = new MemoryFilmService(new MemoryFilmStorage());
 		filmController = new FilmController(filmService);
 	}
 
