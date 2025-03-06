@@ -15,9 +15,9 @@ public interface UserService {
 
     User addFriend(long id, long friendId);
 
-    Set<Long> getUserFriends(long id);
-
     User deleteFriend(long id, long friendId);
 
     Set<Long> getCommonFriends(long userId, long otherId);
+
+    User getUser(long id);
 }

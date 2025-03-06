@@ -43,11 +43,6 @@ public class MemoryUserService implements UserService {
     }
 
     @Override
-    public Set<Long> getUserFriends(long id) {
-        return storage.findById(id).getFriends();
-    }
-
-    @Override
     public User deleteFriend(long id, long friendId) {
         User user = storage.findById(id);
         User friend = storage.findById(friendId);
@@ -60,6 +55,11 @@ public class MemoryUserService implements UserService {
     public Set<Long> getCommonFriends(long userId, long otherId) {
         return storage.findCommonFriends(storage.findById(userId).getFriends(),
                 storage.findById(otherId).getFriends());
+    }
+
+    @Override
+    public User getUser(long id) {
+        return storage.findById(id);
     }
 
     private void validateUser(User user) {
