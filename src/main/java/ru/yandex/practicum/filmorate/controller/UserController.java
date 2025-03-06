@@ -9,6 +9,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -19,6 +21,33 @@ public class UserController {
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/{id}/friends/common/{friendId}")
+    public ResponseEntity<?> getCommonFriends(@PathVariable long id, @PathVariable long friendId) {
+        Set<Long> friends = userService.getCommonFriends(id, friendId);
+        log.info("Common friends - {}", friends);
+        return ResponseEntity.ok(Map.of("friends", friends));
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<?> addFriend(@PathVariable long id, @PathVariable long friendId) {
+        User user = userService.addFriend(id, friendId);
+        log.info("Friend added, friends amount - {}", user.getFriends().size());
+        return ResponseEntity.ok(Map.of("friends", user.getFriends()));
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<?> deleteFriend(@PathVariable long id, @PathVariable long friendId) {
+        User user = userService.deleteFriend(id, friendId);
+        log.info("Friend deleted, friends amount - {}", user.getFriends().size());
+        return ResponseEntity.ok(Map.of("friends", user.getFriends()));
+    }
+
+    @GetMapping("/{id}/friends")
+    public ResponseEntity<Set<Long>> getUserFriends(@PathVariable long id) {
+        Set<Long> friends = userService.getUserFriends(id);
+        return ResponseEntity.ok(friends);
     }
 
     @GetMapping
