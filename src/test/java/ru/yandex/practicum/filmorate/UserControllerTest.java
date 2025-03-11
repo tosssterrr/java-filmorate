@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exception.LoginValidateException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.MemoryUserService;
 import ru.yandex.practicum.filmorate.service.user.UserService;
+import ru.yandex.practicum.filmorate.storage.user.MemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -21,7 +22,7 @@ public class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        userService = new MemoryUserService();
+        userService = new MemoryUserService(new MemoryUserStorage());
         userController = new UserController(userService);
     }
 

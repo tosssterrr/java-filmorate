@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * Film.
@@ -23,4 +24,10 @@ public class Film {
 
     @Positive
     private int duration;
+
+    private Set<Long> likes;
+
+    public int getLikesCount() {
+        return likes == null ? 0 : likes.size();
+    }
 }

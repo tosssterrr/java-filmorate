@@ -22,6 +22,30 @@ public class FilmController {
         this.service = service;
     }
 
+    @PutMapping("/{filmId}/like/{userId}")
+    public ResponseEntity<?> addLike(@PathVariable long filmId, @PathVariable long userId) {
+        log.info("User - {} likes Film - {}", userId, filmId);
+        service.addUserLike(filmId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public ResponseEntity<?> deleteLike(@PathVariable long filmId, @PathVariable long userId) {
+        log.info("User - {} delete like from Film - {}", userId, filmId);
+        service.deleteUserLike(filmId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<?> getPopularFilms(@RequestParam(name = "count", defaultValue = "10") int count) {
+        if (count < 0) {
+            count = 10;
+        }
+        Collection<Film> films = this.service.getPopularFilms(count);
+        log.info("Get popular films - {}", films.size());
+        return ResponseEntity.ok(films);
+    }
+
     @GetMapping
     public ResponseEntity<Collection<Film>> getFilms() {
         Collection<Film> films = this.service.getAllFilms();
