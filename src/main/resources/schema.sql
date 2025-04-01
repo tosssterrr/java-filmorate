@@ -1,3 +1,18 @@
+DROP TABLE IF EXISTS Film_likes CASCADE;
+DROP TABLE IF EXISTS film_genre CASCADE;
+DROP TABLE IF EXISTS User_friendship CASCADE;
+DROP TABLE IF EXISTS Film CASCADE;
+DROP TABLE IF EXISTS Genre CASCADE;
+DROP TABLE IF EXISTS Mpa CASCADE;
+DROP TABLE IF EXISTS Users CASCADE;
+
+--Рейтинг MPA
+CREATE TABLE IF NOT EXISTS Mpa
+(
+    id   INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(10) NOT NULL UNIQUE CHECK (name IN ('G', 'PG', 'PG-13', 'R', 'NC-17'))
+);
+
 -- Фильмы
 CREATE TABLE IF NOT EXISTS Film
 (
@@ -6,7 +21,8 @@ CREATE TABLE IF NOT EXISTS Film
     description  TEXT,
     release_date DATE         NOT NULL,
     duration     INT CHECK (duration > 0),
-    mpa_rating   VARCHAR(10) CHECK (mpa_rating IN ('G', 'PG', 'PG-13', 'R', 'NC-17'))
+    mpa_id       INT,
+    FOREIGN KEY (mpa_id) REFERENCES Mpa (id)
 );
 
 -- Жанры

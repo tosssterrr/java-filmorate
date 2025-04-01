@@ -1,15 +1,24 @@
 package ru.yandex.practicum.filmorate.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Entity
+@Table(name = "Users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "login"),
+        @UniqueConstraint(columnNames = "email")
+})
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Email
@@ -24,5 +33,6 @@ public class User {
     @Past
     private LocalDate birthday;
 
-    private Set<Long> friends;
+    @OneToMany(mappedBy = "user")
+    private Set<Friendship> friendships = new HashSet<>();
 }
