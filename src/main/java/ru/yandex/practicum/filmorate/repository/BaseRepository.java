@@ -48,5 +48,6 @@ public abstract class BaseRepository<K, T> {
     }
 
     protected abstract K extractGeneratedKey(KeyHolder keyHolder);
+
     protected abstract void setGeneratedKeyToEntity(T entity, K key);
 }
