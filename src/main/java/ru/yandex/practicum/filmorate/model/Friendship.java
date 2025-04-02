@@ -2,10 +2,13 @@ package ru.yandex.practicum.filmorate.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "User_friendship", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "friend_id"})

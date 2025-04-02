@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @Entity
 @Table(name = "Genre", uniqueConstraints = {
         @UniqueConstraint(columnNames = "name")

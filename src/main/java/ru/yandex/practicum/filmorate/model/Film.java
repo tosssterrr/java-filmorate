@@ -2,7 +2,8 @@ package ru.yandex.practicum.filmorate.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.yandex.practicum.filmorate.validator.ValidReleaseDate;
 
 import java.time.LocalDate;
@@ -12,7 +13,8 @@ import java.util.List;
 /**
  * Film.
  */
-@Data
+@Setter
+@Getter
 @Entity
 @Table
 public class Film {
