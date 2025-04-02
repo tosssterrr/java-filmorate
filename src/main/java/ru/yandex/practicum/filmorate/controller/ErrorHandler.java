@@ -5,9 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.filmorate.exception.FilmDateException;
 import ru.yandex.practicum.filmorate.exception.IdNotFoundException;
-import ru.yandex.practicum.filmorate.exception.LoginValidateException;
+import ru.yandex.practicum.filmorate.exception.MpaNameValidateException;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
 @Slf4j
@@ -25,19 +24,10 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleFilmDateInvalid(final FilmDateException e) {
-        log.warn("Film date is Invalid");
+    public ErrorResponse handleMpaNameValidation(final MpaNameValidateException e) {
+        log.warn("Mpa name is Invalid");
         return new ErrorResponse(
-                "Film date is Invalid", e.getMessage()
-        );
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleLoginInvalid(final LoginValidateException e) {
-        log.warn("Login is Invalid");
-        return new ErrorResponse(
-                "Your login is Invalid", e.getMessage()
+                "Mpa name is Invalid", e.getMessage()
         );
     }
 }
