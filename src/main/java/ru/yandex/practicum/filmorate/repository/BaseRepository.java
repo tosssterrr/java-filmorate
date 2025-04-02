@@ -2,52 +2,54 @@ package ru.yandex.practicum.filmorate.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public abstract class BaseRepository<K, T> {
-    protected final NamedParameterJdbcTemplate jdbc;
+    protected final JdbcTemplate jdbc;
     protected final RowMapper<T> mapper;
 
-    protected Optional<T> findOne(String query, Map<String, Object> params) {
+    public Optional<T> findOne(String sql, Object... args) {
         try {
-            SqlParameterSource paramSource = new MapSqlParameterSource(params);
-            T result = jdbc.queryForObject(query, paramSource, mapper);
-            return Optional.ofNullable(result);
-        } catch (EmptyResultDataAccessException ignored) {
+            return Optional.ofNullable(jdbc.queryForObject(sql, mapper, args));
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public List<T> findMany(String query, Map<String, Object> params) {
-        SqlParameterSource paramSource = new MapSqlParameterSource(params);
-        return jdbc.query(query, paramSource, mapper);
+    public List<T> findMany(String query, Object... args) {
+        return jdbc.query(query, mapper, args);
     }
 
-    public boolean update(String query, Map<String, Object> params) {
-        SqlParameterSource paramSource = new MapSqlParameterSource(params);
-        return jdbc.update(query, paramSource) > 0;
+    public boolean update(String sql, Object... args) {
+        return jdbc.update(sql, args) > 0;
     }
 
-    protected T insert(String sql, T entity, Map<String, Object> params) {
+    public T insert(String sql, PreparedStatementSetter pss) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update(sql, new MapSqlParameterSource(params), keyHolder);
+        jdbc.update(
+                con -> {
+                    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    pss.setValues(ps);
+                    return ps;
+                },
+                keyHolder
+        );
 
-        K generatedKey = extractGeneratedKey(keyHolder);
-        setGeneratedKeyToEntity(entity, generatedKey);
-        return entity;
+        K generatedId = extractGeneratedKey(keyHolder);
+        return loadById(generatedId);
     }
 
     protected abstract K extractGeneratedKey(KeyHolder keyHolder);
 
-    protected abstract void setGeneratedKeyToEntity(T entity, K key);
+    protected abstract T loadById(K id);
 }
