@@ -66,6 +66,7 @@ public class GenreRepository extends BaseRepository<Long, Genre> {
     protected Long extractGeneratedKey(KeyHolder keyHolder) {
         return keyHolder.getKey().longValue();
     }
+
     @Override
     protected Genre loadById(Long id) {
         return findById(id);
