@@ -4,6 +4,7 @@ import ru.yandex.practicum.filmorate.exception.IdNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 public interface UserService {
@@ -13,11 +14,13 @@ public interface UserService {
 
     User updateUser(User user) throws IdNotFoundException;
 
-    User addFriend(long id, long friendId);
+    void addFriend(long id, long friendId);
 
-    User deleteFriend(long id, long friendId);
+    void deleteFriend(long id, long friendId);
 
-    Set<Long> getCommonFriends(long userId, long otherId);
+    Set<User> getCommonFriends(long userId, long otherId);
 
     User getUser(long id);
+
+    List<User> getFriends(long id);
 }
